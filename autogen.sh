@@ -7,4 +7,4 @@ if [ -z $AUTORECONF ]; then
   exit 1
 fi
 
-$AUTORECONF -i
+$AUTORECONF -if

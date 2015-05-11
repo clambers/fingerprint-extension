@@ -1,8 +1,8 @@
 {
-  "name": @PACKAGE@,
-  "version": @PACKAGE_VERSION@,
-  "homepage": @PACKAGE_URL@,
-  "bugs": @PACKAGE_BUGREPORT@,
+  "name": "@PACKAGE@",
+  "version": "@PACKAGE_VERSION@",
+  "homepage": "@PACKAGE_URL@",
+  "bugs": "@PACKAGE_BUGREPORT@",
   "license": "MPL-2.0",
   "scripts": {
     "test": "mocha"

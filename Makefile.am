@@ -5,8 +5,10 @@ EXTRA_DIST = \
 	$(srcdir)/README.md \
 	$(srcdir)/NEWS.md \
 	$(srcdir)/autogen.sh \
-	$(srcdir)/build-aux/js2c.sh \
-SUBDIRS = fingerprint tests
+	$(srcdir)/build-aux/jsmin \
+	$(srcdir)/build-aux/cppwrap \
+	$(srcdir)/build-aux/tap-driver.sh
+SUBDIRS = common fingerprint tests
 
 pcdir = $(datadir)/pkgconfig
 pc_DATA = fingerprint.pc
