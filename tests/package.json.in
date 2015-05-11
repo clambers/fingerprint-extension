@@ -1,0 +1,14 @@
+{
+  "name": @PACKAGE@,
+  "version": @PACKAGE_VERSION@,
+  "homepage": @PACKAGE_URL@,
+  "bugs": @PACKAGE_BUGREPORT@,
+  "license": "MPL-2.0",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.4",
+    "chai": "^2.3.0"
+  }
+}

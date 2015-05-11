@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: @PACKAGE@
-Description: A native Tizen extension providing JLR common assets
+Description: A wrapper Crosswalk extension for libfprint
 Version: @VERSION@
 Cflags: -I\${includedir}
 Libs: -L\${libdir} -lfingerprint

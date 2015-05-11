@@ -6,10 +6,7 @@ EXTRA_DIST = \
 	$(srcdir)/NEWS.md \
 	$(srcdir)/autogen.sh \
 	$(srcdir)/build-aux/js2c.sh \
-	$(srcdir)/packaging/fingerprint.spec \
-	$(srcdir)/m4/package.m4 \
-	$(srcdir)/m4/programs.m4
-SUBDIRS = lib src tests
+SUBDIRS = fingerprint tests
 
 pcdir = $(datadir)/pkgconfig
 pc_DATA = fingerprint.pc
