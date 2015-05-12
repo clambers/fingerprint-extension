@@ -12,6 +12,8 @@ AM_SILENT_RULES([yes])
 
 LT_INIT
 
+AX_DOCUMENTATION
+
 AC_PROG_CXX
 PKG_CHECK_MODULES([dlog], [dlog])
 PKG_CHECK_MODULES([jansson], [jansson])
@@ -26,6 +28,5 @@ fingerprint/Makefile
 tests/Makefile
 tests/package.json
 ])
-AC_REQUIRE_AUX_FILE([tap-driver.sh])
 
 AC_OUTPUT

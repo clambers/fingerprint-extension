@@ -1,6 +1,7 @@
 #ifndef FP_INSTANCE_H
 #define FP_INSTANCE_H
 
+#include <dlog.h>
 #include <string>
 #include <common/extension.h>
 

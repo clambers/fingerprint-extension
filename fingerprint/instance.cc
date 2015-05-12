@@ -2,11 +2,16 @@
 
 namespace fp = fingerprint;
 
-fp::Instance::Instance() {}
+fp::Instance::Instance() {
+  LOGD("instance created");
+}
 
-fp::Instance::~Instance() {}
+fp::Instance::~Instance() {
+  LOGD("instance destroyed");
+}
 
 void fp::Instance::HandleMessage(char const* message) {
+  LOGD("received message");
   auto response = PrepareMessage(message);
   PostMessage(response.c_str());
 }

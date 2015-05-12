@@ -13,7 +13,6 @@
     dispatch: function(res) {
       var id = res[this.key];
       var handler = this.handlers[id];
-      delete res.id;
       handler.apply(null, Array.prototype.slice.call(res));
     }
   };
@@ -24,27 +23,49 @@
   });
 
   function postMessage(id, msg) {
+    msg.jsonrpc = '2.0';
     if (id !== undefined && id !== null) {
       msg[callbacks.key] = id;
     }
     extension.postMessage(JSON.stringify(msg));
   }
 
-  exports.scanFinger = function(name, gender, fingerType, cb) {
+  /**
+   * Scan and save a finger using the currently selected fingerprint
+   * device.
+   *
+   * @param {String} name - Name to save as
+   * @param {Function} cb - Callback function
+   */
+  exports.scan = function(name, cb) {
     var id = callbacks.setup(cb);
-    var msg = { cmd: 'scan-finger' };
+    var msg = { method: 'scan', params: name };
     postMessage(id, msg);
   };
 
-  exports.verifyFinger = function(name, gender, cb) {
+  /**
+   * Verify a previously scanned fingerprint using the currently
+   * selected fingerprint scanner.
+   *
+   * @param {Function} cb - Callback function
+   *
+   * @returns {Boolean} True if verified, false otherwise
+   */
+  exports.verify = function(cb) {
     var id = callbacks.setup(cb);
-    var msg = { cmd: 'verify-finger' };
+    var msg = { method: 'verify', params: name };
     postMessage(id, msg);
   };
 
-  exports.deleteFinger = function(name, gender, fingerType, categoryType, cb) {
+  /**
+   * Delete a previously scanned fingerprint.
+   *
+   * @param {String} name - Name when scanned
+   * @param {Function} cb - Callback function
+   */
+  exports.delete = function(name, cb) {
     var id = callbacks.setup(cb);
-    var msg = { cmd: 'delete-finger' };
+    var msg = { method: 'delete', params: name };
     postMessage(id, msg);
   };
 })();

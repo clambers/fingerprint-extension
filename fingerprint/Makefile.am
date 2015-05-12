@@ -1,8 +1,8 @@
 BUILT_SOURCES = api.h
 JSMIN = $(top_srcdir)/build-aux/jsmin
 CPPWRAP = $(top_srcdir)/build-aux/cppwrap
-EXTRA_DIST = 40-libfprint0.rules
-MAINTAINERCLEANFILES = api.h
+EXTRA_DIST = 40-libfprint0.rules $(MODULES)
+CLEANFILES = api.h
 
 extdir = $(libdir)/tizen-extensions-crosswalk
 ruledir = $(libdir)/udev/rules.d
@@ -22,4 +22,5 @@ libfingerprint_la_LIBADD = $(top_builddir)/common/libcommon.la @dlog_LIBS@ \
 rule_DATA = 40-libfprint0.rules
 
 %.h: %.js
-	$(AM_V_GEN) $(JSMIN) -o $*.min.js $< && $(CPPWRAP) -o $@ $*.min.js
+	$(AX_V_JSMIN) $(JSMIN) -o $*.min.js $<
+	$(AX_V_CPPWRAP) $(CPPWRAP) -o $@ $*.min.js
