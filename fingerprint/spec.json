@@ -1,0 +1,21 @@
+[
+  {
+    "name": "scan",
+    "params": {
+      "name": ""
+    },
+    "returns": null
+  },
+  {
+    "name": "verify",
+    "params": {},
+    "returns": false
+  },
+  {
+    "name": "remove",
+    "params": {
+      "name": ""
+    },
+    "returns": null
+  }
+]

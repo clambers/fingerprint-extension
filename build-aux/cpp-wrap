@@ -10,7 +10,7 @@ import inspect
 
 TEMPLATE = """\
 extern const char {0}[];
-const char {0}[] = {{{1}, 0}};
+const char {0}[] = {{ {1}, 0 }};
 
 """
 

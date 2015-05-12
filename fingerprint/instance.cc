@@ -1,26 +1,35 @@
-#include <fingerprint/instance.h>
+#include <config.h>
+
+#define LOG_TAG PACKAGE
+
+#include <fingerprint/instance.hh>
+#include <dlog.h>
+#include <exception>
 
 namespace fp = fingerprint;
 
-fp::Instance::Instance() {
+fp::instance::instance() {
   LOGD("instance created");
 }
 
-fp::Instance::~Instance() {
+fp::instance::~instance() {
   LOGD("instance destroyed");
 }
 
-void fp::Instance::HandleMessage(char const* message) {
-  LOGD("received message");
-  auto response = PrepareMessage(message);
-  PostMessage(response.c_str());
+void fp::instance::error(std::string const& e) {
+  LOGE("%s", e.c_str());
+  throw std::runtime_error(e.c_str());
 }
 
-void fp::Instance::HandleSyncMessage(char const* message) {
-  auto response = PrepareMessage(message);
-  SendSyncReply(response.c_str());
+void fp::instance::scan(std::string const& name) {
+  LOGD("%s", name.c_str());
 }
 
-std::string fp::Instance::PrepareMessage(std::string const& message) const {
-  return "You said: " + message;
+bool fp::instance::verify() {
+  LOGD("verifying");
+  return true;
+}
+
+void fp::instance::remove(std::string const& name) {
+  LOGD("%s", name.c_str());
 }

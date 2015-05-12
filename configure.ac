@@ -5,6 +5,8 @@ AC_INIT([fingerprint], [0.0.1],
 [https://github.com/PDXostc/fingerprint-extension])
 AC_CONFIG_SRCDIR([fingerprint/extension.cc])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_REQUIRE_AUX_FILE([cpp-wrap])
+AC_REQUIRE_AUX_FILE([rpc-wrap])
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([1.14 foreign tar-ustar -Wall -Werror -Wno-portability])

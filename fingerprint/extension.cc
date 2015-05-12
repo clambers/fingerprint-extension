@@ -1,26 +1,27 @@
-#define LOG_TAG "fingerprint"
+#include <config.h>
 
-#include <dlog.h>
-#include <fingerprint/extension.h>
-#include <fingerprint/instance.h>
-#include <fingerprint/api.h>
+#define LOG_TAG PACKAGE
+
+#include <fingerprint/extension.hh>
+#include <fingerprint/instance.hh>
+#include <fingerprint/api.hh>
 
 namespace fp = fingerprint;
 
 common::Extension * CreateExtension() {
-  return new fp::Extension();
+  return new fp::extension;
 }
 
-fp::Extension::Extension() {
+fp::extension::extension() {
   LOGD("extension created");
   SetExtensionName("fingerprint");
   SetJavaScriptAPI(kSource_api);
 }
 
-fp::Extension::~Extension() {
+fp::extension::~extension() {
   LOGD("extension destroyed");
 }
 
-common::Instance * fp::Extension::CreateInstance() {
-  return new fp::Instance();
+common::Instance * fp::extension::CreateInstance() {
+  return new fp::instance;
 }

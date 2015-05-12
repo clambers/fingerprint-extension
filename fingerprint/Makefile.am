@@ -1,17 +1,18 @@
-BUILT_SOURCES = api.h
-JSMIN = $(top_srcdir)/build-aux/jsmin
-CPPWRAP = $(top_srcdir)/build-aux/cppwrap
+BUILT_SOURCES = api.hh spec.hh
+CPPWRAP = $(top_srcdir)/build-aux/cpp-wrap
+RPCWRAP = $(top_srcdir)/build-aux/rpc-wrap
 EXTRA_DIST = 40-libfprint0.rules $(MODULES)
-CLEANFILES = api.h
+CLEANFILES = api.hh spec.hh
 
 extdir = $(libdir)/tizen-extensions-crosswalk
 ruledir = $(libdir)/udev/rules.d
 
 ext_LTLIBRARIES = libfingerprint.la
 libfingerprint_la_SOURCES = \
-  extension.cc extension.h \
-  instance.cc instance.h \
-  api.js
+  extension.cc extension.hh \
+  instance.cc instance.hh \
+  api.js \
+  spec.json
 libfingerprint_la_CPPFLAGS = -I$(top_srcdir) @dlog_CFLAGS@ @jansson_CFLAGS@ \
   @libfprint_CFLAGS@
 libfingerprint_la_CXXFLAGS = -std=c++11
@@ -21,6 +22,8 @@ libfingerprint_la_LIBADD = $(top_builddir)/common/libcommon.la @dlog_LIBS@ \
 
 rule_DATA = 40-libfprint0.rules
 
-%.h: %.js
-	$(AX_V_JSMIN) $(JSMIN) -o $*.min.js $<
-	$(AX_V_CPPWRAP) $(CPPWRAP) -o $@ $*.min.js
+%.hh: %.js $(CPPWRAP)
+	$(AM_V_GEN) $(CPPWRAP) -o $@ $<
+
+%.hh: %.json $(RPCWRAP)
+	$(AM_V_GEN) $(RPCWRAP) -n fingerprint -o $@ $<
