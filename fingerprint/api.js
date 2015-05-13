@@ -38,7 +38,10 @@ extension.setMessageListener(function(msg) {
  */
 exports.scan = function(name, cb) {
   var id = callbacks.setup(cb);
-  var msg = { method: 'scan', params: name };
+  var msg = {
+    method: 'scan',
+    params: { name: name }
+  };
   postMessage(id, msg);
 };
 
@@ -52,7 +55,10 @@ exports.scan = function(name, cb) {
  */
 exports.verify = function(cb) {
   var id = callbacks.setup(cb);
-  var msg = { method: 'verify' };
+  var msg = {
+    method: 'verify',
+    params: {}
+  };
   postMessage(id, msg);
 };
 
@@ -64,6 +70,9 @@ exports.verify = function(cb) {
  */
 exports.remove = function(name, cb) {
   var id = callbacks.setup(cb);
-  var msg = { method: 'remove', params: name };
+  var msg = {
+    method: 'remove',
+    params: { name: name }
+  };
   postMessage(id, msg);
 };
