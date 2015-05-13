@@ -4,7 +4,7 @@
 
 #include <fingerprint/extension.hh>
 #include <fingerprint/instance.hh>
-#include <fingerprint/api.hh>
+#include <fingerprint/spec.hh>
 
 namespace fp = fingerprint;
 

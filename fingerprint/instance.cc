@@ -17,7 +17,7 @@ fp::instance::~instance() {
 }
 
 void fp::instance::scan(std::string const& name) {
-  LOGD("%s", name.c_str());
+  LOGD("scanning %s", name.c_str());
 }
 
 bool fp::instance::verify() {
@@ -26,5 +26,5 @@ bool fp::instance::verify() {
 }
 
 void fp::instance::remove(std::string const& name) {
-  LOGD("%s", name.c_str());
+  LOGD("removing %s", name.c_str());
 }

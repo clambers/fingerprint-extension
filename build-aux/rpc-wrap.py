@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 import sys
 import argparse
 import inspect
@@ -72,8 +74,76 @@ def main():
     args = parser.parse_args()
 
     spec = json.load(args.input)
-    cw = CodeWriter(args.output, spaces=args.spaces)
 
+    js_block = """
+var callbacks = {{
+  nextId: 0,
+  handlers: {{}},
+  key: "id",
+
+  setup: function(cb) {{
+    var id = ++this.nextId;
+    this.handlers[id] = cb;
+    return id;
+  }},
+
+  dispatch: function(response) {{
+    var id = response[this.key];
+    var handler = this.handlers[id];
+    handler(response.result);
+  }}
+}};
+
+function postMessage(id, msg) {{
+  msg.jsonrpc = "2.0";
+  if (id !== undefined && id !== null) {{
+    msg[callbacks.key] = id;
+  }}
+  extension.postMessage(JSON.stringify(msg));
+}}
+
+extension.setMessageListener(function(msg) {{
+  var res = JSON.parse(msg);
+  callbacks.dispatch(res);
+}});
+
+{methods}
+"""
+
+    method_block = """
+exports.{name} = function({sig}) {{
+  var id = callbacks.setup(callback)
+  var msg = {{
+    method: "{name}",
+    params: {{
+      {plist}
+    }}
+  }};
+  postMessage(id, msg);
+}};
+"""
+
+    methods = list()
+
+    for method in spec:
+        p = method['params']
+        sig = ', '.join(p.keys() + ['callback'])
+        plist = ',\n      '.join('{0}: {0}'.format(k) for k in p.keys())
+        tmpl = method.update({
+            'sig': sig,
+            'plist': plist
+        })
+        methods.append(method_block.format(**method))
+
+    javascript = js_block.format(methods=''.join(methods))
+
+    cpp_block = """
+static const char kSource_api[] = {{ {}, 0 }};
+"""
+
+    cpp = cpp_block.format(', '.join(str(ord(ch)) for ch in javascript))
+
+    cw = CodeWriter(args.output, spaces=args.spaces)
     cw.out('#ifndef SPEC_INSTANCE_HH')
     cw.out('#define SPEC_INSTANCE_HH')
     cw.out()
@@ -86,11 +156,10 @@ def main():
     cw.out('#include <dlog.h>')
     cw.out('#include <string>')
     cw.out('#include <functional>')
-    cw.out()
+    cw.out('{}', cpp)
     if args.namespace:
         cw.out('namespace {} {{', args.namespace)
         cw.indent()
-    cw.out('using namespace std::placeholders;')
     cw.out()
     cw.out('class {} : public common::Instance {{', args.cname)
     cw.out('private:')
@@ -132,8 +201,6 @@ def main():
                name)
         cw.indent()
         for k,v in params.items():
-            cw.out('LOGD("calling method \'{}\'");', name)
-            cw.out()
             cw.out('if (!p["{}"].is<{}>()) {{', k, typeconv(v, 'decl'))
             cw.indent()
             cw.out('LOGE("JSON-RPC param \'{}\' not a {}");',
@@ -144,7 +211,9 @@ def main():
         for k,v in params.items():
             cw.out('auto {0} = p["{0}"].get<{1}>();', k, typeconv(v, 'decl'))
         if type(returns) is type(None):
-            cw.out('auto result = nullptr;')
+            cw.out('picojson::object result;')
+            cw.out()
+            cw.out('{}({});', name, sig)
         else:
             cw.out('auto result = {}({});', name, sig)
         cw.out()
@@ -159,8 +228,9 @@ def main():
     cw.indent()
     for method in spec:
         name = method['name']
-        cw.out('fmap["{0}"] = std::bind(&{1}::{0}_wrapper, this, _1);',
-               name, args.cname)
+        cw.out('fmap["{}"] = ', name)
+        cw.out('  std::bind(&{}::{}_wrapper, this, std::placeholders::_1);',
+               args.cname, name)
     cw.dedent()
     cw.out('}}')
     cw.out()
@@ -186,11 +256,7 @@ def main():
     cw.dedent()
     cw.out('}}')
     cw.out()
-    cw.out('LOGD("getting root object");')
-    cw.out()
     cw.out('auto request = root.get<picojson::object>();')
-    cw.out()
-    cw.out('LOGD("checking method");')
     cw.out()
     cw.out('auto method = request["method"];')
     cw.out('if (!method.is<std::string>()) {{')
@@ -199,8 +265,6 @@ def main():
     cw.dedent()
     cw.out('}}')
     cw.out()
-    cw.out('LOGD("checking params");')
-    cw.out()
     cw.out('auto params = request.at("params");')
     cw.out('if (!params.is<picojson::object>()) {{')
     cw.indent()
@@ -208,16 +272,12 @@ def main():
     cw.dedent()
     cw.out('}}')
     cw.out()
-    cw.out('LOGD("checking id");')
-    cw.out()
     cw.out('auto id = request.at("id");')
     cw.out('if (!id.is<double>()) {{')
     cw.indent()
     cw.out('LOGE("JSON-RPC request id is not a Number");')
     cw.dedent()
     cw.out('}}')
-    cw.out()
-    cw.out('LOGD("dispatching to wrappers");')
     cw.out()
     cw.out('auto f = fmap[method.get<std::string>()];')
     cw.out('auto p = params.get<picojson::object>();')

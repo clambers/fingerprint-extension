@@ -5,9 +5,7 @@ EXTRA_DIST = \
 	$(srcdir)/README.md \
 	$(srcdir)/NEWS.md \
 	$(srcdir)/autogen.sh \
-	$(srcdir)/build-aux/jsmin \
-	$(srcdir)/build-aux/cppwrap \
-	$(srcdir)/build-aux/tap-driver.sh
+  $(srcdir)/build-aux/rpc-wrap.py
 SUBDIRS = common fingerprint tests
 
 pcdir = $(datadir)/pkgconfig
