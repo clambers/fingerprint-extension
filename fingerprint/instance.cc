@@ -16,11 +16,6 @@ fp::instance::~instance() {
   LOGD("instance destroyed");
 }
 
-void fp::instance::error(std::string const& e) {
-  LOGE("%s", e.c_str());
-  throw std::runtime_error(e.c_str());
-}
-
 void fp::instance::scan(std::string const& name) {
   LOGD("%s", name.c_str());
 }
